@@ -8,6 +8,11 @@ const ulTarefas = document.querySelector('.app__section-task-list');
 // Caso não exista algo na LS, inicializa com ArrayVazio
 const tarefas = JSON.parse( localStorage.getItem('tarefas') ) || [];
 
+function atualizarTarefas () {
+    localStorage.setItem( 'tarefas', JSON.stringify(tarefas) );
+};
+
+
 // Esta função cria um componente complexo,
 // segundo o arquivo template : template-de-tarefa.tpl
 function criarElementoTarefa( tarefa ) {
@@ -32,6 +37,14 @@ function criarElementoTarefa( tarefa ) {
     const botao = document.createElement('button');
     botao.classList.add('app_button-edit');
     botao.append( imagemBotao );
+    botao.onclick = () => {
+        const novaDescricao = prompt( "Qual é a nova Descrição da tarefa ?" );
+        if (novaDescricao) {
+            paragrafo.textContent = novaDescricao;
+            tarefa.descricao = novaDescricao;
+            atualizarTarefas();                
+        }
+    };
 
     li.append( svg );
     li.append( paragrafo );
@@ -58,16 +71,21 @@ formAdicionarTarefa.addEventListener('submit', (evento) => {
     ulTarefas.append( elementoTarefa );
 
     // Guarda tarefa na LS
-    localStorage.setItem( 'tarefas', JSON.stringify(tarefas) );
+    atualizarTarefas();
 
     // Limpa o FORM e esconde
     textArea.value = '';
     formAdicionarTarefa.classList.add('hidden');
 });
 
-tarefas.forEach( tarefa => {
-    const elementoTarefa = criarElementoTarefa( tarefa );
-    ulTarefas.append( elementoTarefa );
-});
+document.addEventListener('DOMContentLoaded', function() {
+    const tarefasSalvas = JSON.parse( localStorage.getItem('tarefas') ) || [];
+    tarefasSalvas.forEach( tarefa => {
+        const elementoTarefa = criarElementoTarefa( tarefa );
+        ulTarefas.append( elementoTarefa );
+    });
+})
+
+
 
 
