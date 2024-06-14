@@ -19,7 +19,7 @@ const audioPlay = new Audio('./sons/play.wav');
 const audioPausa = new Audio('./sons/pause.mp3');
 const audioTempoFinalizado = new Audio('./sons/beep.mp3');
 
-let tempoDecorridoEmSegundos = 1500;
+let tempoDecorridoEmSegundos = 10;
 let intervaloId = null;
 
 musicaFocoInput.addEventListener('change', () => {
@@ -33,7 +33,7 @@ musicaFocoInput.addEventListener('change', () => {
 
 // Adicionando um evento ao botao para mudar um atributo
 focoBt.addEventListener( 'click', () => {
-    tempoDecorridoEmSegundos = 1500;
+    tempoDecorridoEmSegundos = 10;
     alteraContexto('foco');
     focoBt.classList.add('active');
 });
@@ -86,7 +86,16 @@ function alteraContexto( contexto ) {
 const contagemRegressiva = () => {
     if( tempoDecorridoEmSegundos <= 0 ) {
         audioTempoFinalizado.play();
-        alert('esgotou');
+        alert('Tempo finalizado');
+        // --------------------------------------------------------
+        // o trecho a seguir é uma integração entre o projeto FOKUS
+        // e o projeto ToDoList
+        const focoAtivo = html.getAttribute('data-contexto') == 'foco';
+        if (focoAtivo) {
+            const evento = new CustomEvent( 'FocoFinalizado' );
+            document.dispatchEvent( evento );
+        };
+        // --------------------------------------------------------
         zerar();
         return;
     }
@@ -113,7 +122,7 @@ function zerar() {
     imgBotaoStartStop.setAttribute( 'src', "./imagens/play_arrow.png");
     comecarPausarBt.textContent = 'Começar';
     intervaloId = null;
-    tempoDecorridoEmSegundos = 1500;
+    tempoDecorridoEmSegundos = 10;
     return;
 }
 
