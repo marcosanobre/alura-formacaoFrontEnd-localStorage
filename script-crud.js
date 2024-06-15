@@ -6,6 +6,7 @@ const ulTarefas = document.querySelector('.app__section-task-list');
 const btnCancelarTarefa = document.querySelector('.app__form-footer__button--cancel');
 const paragrafoDescricaoTarefa = document.querySelector('.app__section-active-task-description');
 const btnRemoverConcluidas = document.querySelector('#btn-remover-concluidas');
+const btnRemoverTodas = document.querySelector('#btn-remover-todas');
 
 let   tarefaSelecionada = null;
 let   liTarefaSelecionada = null;
@@ -101,14 +102,18 @@ btnCancelarTarefa.addEventListener( 'click', () => {
     limpaEescondeForm ();
 });
 
-btnRemoverConcluidas.onclick = () => {
-    const seletor = ".app__section-task-list-item-complete";
+const removerTarefas = ( somenteConcluidas ) => {
+    const seletor = somenteConcluidas ? ".app__section-task-list-item-complete" : ".app__section-task-list-item";
     document.querySelectorAll( seletor ).forEach( elemento => {
         elemento.remove();
-        tarefas = tarefas.filter( tarefa => !tarefa.completa );
+        tarefas = somenteConcluidas ? tarefas.filter( tarefa => !tarefa.completa ) : [];
         atualizarLocalStorage();                
     })
 };
+
+btnRemoverConcluidas.onclick = () => removerTarefas( true );
+
+btnRemoverTodas.onclick = () => removerTarefas( false );
 
 formAdicionarTarefa.addEventListener('submit', (evento) => {
     evento.preventDefault();
